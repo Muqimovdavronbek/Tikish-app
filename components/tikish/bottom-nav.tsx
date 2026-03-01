@@ -16,6 +16,8 @@ interface BottomNavProps {
   onNavigate: (s: Screen) => void
 }
 
+const PRIMARY = "#e85d8a"
+
 export default function BottomNav({ activeScreen, onNavigate }: BottomNavProps) {
   return (
     <div
@@ -46,12 +48,12 @@ export default function BottomNav({ activeScreen, onNavigate }: BottomNavProps) 
             <Icon
               size={22}
               strokeWidth={isActive ? 2.2 : 1.6}
-              style={{ color: isActive ? P : "#c4b0bc", position: "relative" }}
+              style={{ color: isActive ? PRIMARY : "#c4b0bc", position: "relative" }}
             />
             <span
               className="relative leading-tight"
               style={{
-                color: isActive ? P : "#c4b0bc",
+                color: isActive ? PRIMARY : "#c4b0bc",
                 fontFamily: "'Inter', sans-serif",
                 fontSize: 9,
                 fontWeight: isActive ? 600 : 400,
