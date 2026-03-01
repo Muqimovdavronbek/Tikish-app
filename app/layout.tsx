@@ -7,8 +7,8 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
+  title: 'TIKISH.UZ - Find Expert Tailors in Uzbekistan',
+  description: 'Connect with verified tailors for custom clothing, alterations, and traditional Uzbek designs. Quality craftsmanship, transparent pricing, secure payments.',
   generator: 'v0.app',
   icons: {
     icon: [
