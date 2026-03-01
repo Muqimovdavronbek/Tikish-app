@@ -15,6 +15,8 @@ import ProfileScreen from "@/components/tikish/profile-screen"
 import TailorDashboardScreen from "@/components/tikish/tailor-dashboard-screen"
 import BottomNav from "@/components/tikish/bottom-nav"
 
+import AiStylistScreen from "@/components/tikish/ai-stylist-screen"
+
 export type Screen =
   | "splash"
   | "onboarding"
@@ -25,10 +27,11 @@ export type Screen =
   | "tailor-profile"
   | "order"
   | "chat"
+  | "ai-stylist"
   | "profile"
   | "tailor-dashboard"
 
-const SCREENS_WITH_NAV: Screen[] = ["home", "search", "profile", "tailor-dashboard"]
+const SCREENS_WITH_NAV: Screen[] = ["home", "search", "ai-stylist", "profile", "tailor-dashboard"]
 
 const pageVariants = {
   enter: { opacity: 0, y: 18 },
@@ -134,6 +137,7 @@ export default function TikishApp() {
                 <OrderScreen onChat={() => navigate("chat")} onBack={() => navigate("tailor-profile")} />
               )}
               {screen === "chat" && <ChatScreen onBack={() => navigate("tailor-profile")} />}
+              {screen === "ai-stylist" && <AiStylistScreen onBack={() => navigate("home")} />}
               {screen === "profile" && (
                 <ProfileScreen
                   onTailorDashboard={() => navigate("tailor-dashboard")}

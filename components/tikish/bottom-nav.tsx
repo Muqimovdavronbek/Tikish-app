@@ -1,15 +1,12 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Home, Search, User, LayoutDashboard } from "lucide-react"
-import type { Screen } from "@/app/page"
-
-const P = "#e85d8a"
-const DARK = "#1a1a2e"
+import { Home, Search, Sparkles, User, LayoutDashboard } from "lucide-react"
 
 const tabs: { id: Screen; label: string; Icon: React.ComponentType<{ size?: number; strokeWidth?: number }> }[] = [
   { id: "home", label: "Bosh sahifa", Icon: Home },
   { id: "search", label: "Qidiruv", Icon: Search },
+  { id: "ai-stylist", label: "AI Stilist", Icon: Sparkles },
   { id: "profile", label: "Profil", Icon: User },
   { id: "tailor-dashboard", label: "Dashboard", Icon: LayoutDashboard },
 ]
