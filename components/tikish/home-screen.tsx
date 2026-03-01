@@ -1,269 +1,322 @@
 "use client"
 
 import { useState } from "react"
-import { Bell, Search, Star, ShoppingBag, ChevronRight, MapPin } from "lucide-react"
-import type { Tab } from "@/app/page"
+import { motion, AnimatePresence } from "framer-motion"
+import { Bell, Search, Star, MapPin, ChevronRight, Navigation, Filter } from "lucide-react"
 
-const CATEGORIES = ["Barchasi", "Erkaklar", "Ayollar", "Bolalar", "Milliy", "Sport"]
-
-const ITEMS = [
-  {
-    id: 1,
-    name: "Klassik Kostyum",
-    tailor: "Rustam Masterlar",
-    price: "450 000",
-    rating: 4.9,
-    tag: "Mashhur",
-    img: "/outfit-suit.jpg",
-  },
-  {
-    id: 2,
-    name: "Oqshom Ko'ylagi",
-    tailor: "Madina Fashion",
-    price: "380 000",
-    rating: 4.8,
-    tag: "Yangi",
-    img: "/outfit-dress.jpg",
-  },
-  {
-    id: 3,
-    name: "Milliy Chapan",
-    tailor: "Gulnoza Atelier",
-    price: "520 000",
-    rating: 4.9,
-    tag: "Tavsiya",
-    img: "/outfit-traditional.jpg",
-  },
-  {
-    id: 4,
-    name: "Bolalar Kiyimi",
-    tailor: "Kids Style UZ",
-    price: "220 000",
-    rating: 4.7,
-    tag: "Mashhur",
-    img: "/outfit-kids.jpg",
-  },
-]
+const P = "#e85d8a"
+const DARK = "#1a1a2e"
 
 const TAILORS = [
-  { id: 1, name: "Madina S.", city: "Toshkent", rating: 4.9, orders: 127 },
-  { id: 2, name: "Rustam T.", city: "Samarqand", rating: 4.8, orders: 95 },
-  { id: 3, name: "Gulnoza A.", city: "Buxoro", rating: 4.9, orders: 156 },
+  { id: 1, name: "Madina Umarova", city: "Chilonzor", dist: "0.8 km", rating: 4.9, orders: 127, spec: "Ayollar kiyimi", img: "/tailor-1.jpg", x: 52, y: 38 },
+  { id: 2, name: "Rustam Toshev", city: "Yunusobod", dist: "1.4 km", rating: 4.8, orders: 95, spec: "Erkaklar kiyimi", img: "/tailor-2.jpg", x: 70, y: 55 },
+  { id: 3, name: "Gulnoza Nazarova", city: "Mirzo Ulug'bek", dist: "2.1 km", rating: 4.9, orders: 156, spec: "To'y libosi", img: "/tailor-1.jpg", x: 35, y: 60 },
+  { id: 4, name: "Bobur Ismoilov", city: "Shayhontohur", dist: "3.0 km", rating: 4.7, orders: 88, spec: "Milliy kiyim", img: "/tailor-2.jpg", x: 62, y: 72 },
 ]
 
+const CATS = ["Barchasi", "Ayollar", "Erkaklar", "To'y", "Milliy", "Bolalar"]
+
 interface HomeScreenProps {
-  onTabChange: (tab: Tab) => void
+  onTailorPress: () => void
+  onSearchPress: () => void
 }
 
-export default function HomeScreen({ onTabChange }: HomeScreenProps) {
-  const [activeCategory, setActiveCategory] = useState("Barchasi")
-  const [search, setSearch] = useState("")
+export default function HomeScreen({ onTailorPress, onSearchPress }: HomeScreenProps) {
+  const [mapMode, setMapMode] = useState(true)
+  const [selected, setSelected] = useState<number | null>(null)
+  const [cat, setCat] = useState("Barchasi")
 
   return (
-    <div className="flex flex-col min-h-full" style={{ background: "#f8f7f5", fontFamily: "'Inter', sans-serif" }}>
+    <div className="flex flex-col min-h-full" style={{ background: "#f7f3f5" }}>
       {/* Header */}
-      <div
-        className="px-5 pt-4 pb-5"
-        style={{ background: "#0a0a2e" }}
-      >
+      <div className="px-5 pt-4 pb-4 shrink-0" style={{ background: DARK }}>
         <div className="flex items-center justify-between mb-4">
           <div>
-            <p className="text-xs font-medium" style={{ color: "#D4AF37", letterSpacing: "0.08em" }}>
-              RAQAMLI MODELYER
-            </p>
+            <div className="flex items-center gap-1.5">
+              <MapPin size={12} style={{ color: P }} />
+              <p className="text-xs font-medium" style={{ color: "rgba(255,255,255,0.55)" }}>
+                Toshkent, O'zbekiston
+              </p>
+            </div>
             <h1
-              className="text-2xl font-bold text-white"
-              style={{ fontFamily: "'Playfair Display', serif", letterSpacing: "-0.01em" }}
+              className="text-xl font-bold text-white mt-0.5"
+              style={{ fontFamily: "'Playfair Display', serif" }}
             >
-              TIKISH.UZ
+              Yaqin tikuvchilar
             </h1>
           </div>
-          <button
-            className="relative w-10 h-10 rounded-full flex items-center justify-center"
-            style={{ background: "rgba(212,175,55,0.15)", border: "1px solid rgba(212,175,55,0.3)" }}
-          >
-            <Bell size={18} style={{ color: "#D4AF37" }} />
-            <span
-              className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full"
-              style={{ background: "#D4AF37", border: "1.5px solid #0a0a2e" }}
-            />
-          </button>
-        </div>
-
-        {/* Search */}
-        <div
-          className="flex items-center gap-2 px-4 rounded-2xl"
-          style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.1)", height: 44 }}
-        >
-          <Search size={16} style={{ color: "rgba(255,255,255,0.5)" }} />
-          <input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Tikuvchi yoki uslub izlang..."
-            className="flex-1 bg-transparent text-white placeholder-white/40 text-sm outline-none"
-            style={{ fontFamily: "'Inter', sans-serif" }}
-          />
-        </div>
-      </div>
-
-      {/* Hero banner */}
-      <div className="mx-4 mt-4 rounded-2xl overflow-hidden relative" style={{ height: 160 }}>
-        <img src="/hero-fashion.jpg" alt="Hero" className="w-full h-full object-cover" />
-        <div
-          className="absolute inset-0 flex flex-col justify-end p-4"
-          style={{ background: "linear-gradient(to top, rgba(10,10,46,0.85) 0%, transparent 60%)" }}
-        >
-          <p className="text-white text-xs font-medium mb-1" style={{ color: "#D4AF37" }}>
-            2026 KOLLEKSIYASI
-          </p>
-          <h2
-            className="text-white font-bold text-lg leading-tight"
-            style={{ fontFamily: "'Playfair Display', serif" }}
-          >
-            Sizning raqamli modelyeringiz
-          </h2>
-          <button
-            onClick={() => onTabChange("stylist")}
-            className="mt-2 self-start px-4 py-1.5 rounded-full text-xs font-semibold"
-            style={{ background: "#D4AF37", color: "#0a0a2e" }}
-          >
-            Boshlash
-          </button>
-        </div>
-      </div>
-
-      {/* Categories */}
-      <div className="mt-5 px-4">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-semibold" style={{ color: "#0a0a2e" }}>
-            Kategoriyalar
-          </h3>
-        </div>
-        <div className="flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
-          {CATEGORIES.map((cat) => (
+          <div className="flex items-center gap-2">
             <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className="shrink-0 px-4 py-1.5 rounded-full text-xs font-medium transition-all"
-              style={{
-                background: activeCategory === cat ? "#D4AF37" : "#ffffff",
-                color: activeCategory === cat ? "#0a0a2e" : "#6b7280",
-                border: `1px solid ${activeCategory === cat ? "#D4AF37" : "#e8e0d0"}`,
-                fontFamily: "'Inter', sans-serif",
-              }}
+              className="relative w-10 h-10 rounded-full flex items-center justify-center"
+              style={{ background: "rgba(232,93,138,0.15)", border: "1px solid rgba(232,93,138,0.3)" }}
             >
-              {cat}
+              <Bell size={17} style={{ color: P }} />
+              <span className="absolute top-2 right-2 w-2 h-2 rounded-full" style={{ background: P, border: `1.5px solid ${DARK}` }} />
             </button>
-          ))}
+          </div>
         </div>
+
+        {/* Search bar */}
+        <button
+          onClick={onSearchPress}
+          className="w-full flex items-center gap-2 px-4 rounded-2xl text-left"
+          style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.08)", height: 46 }}
+        >
+          <Search size={15} style={{ color: "rgba(255,255,255,0.4)" }} />
+          <span className="text-sm" style={{ color: "rgba(255,255,255,0.4)" }}>Tikuvchi yoki xizmat izlang...</span>
+        </button>
       </div>
 
-      {/* Featured Collection */}
-      <div className="mt-5 px-4">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-semibold" style={{ color: "#0a0a2e" }}>
-            Mashhur Kolleksiya
-          </h3>
-          <button className="flex items-center gap-0.5 text-xs" style={{ color: "#D4AF37" }}>
-            Barchasi <ChevronRight size={12} />
+      {/* Toggle map/list */}
+      <div className="px-5 pt-3 pb-2 flex items-center gap-2 shrink-0" style={{ background: DARK }}>
+        {["Xarita", "Ro'yxat"].map((label, i) => (
+          <button
+            key={label}
+            onClick={() => setMapMode(i === 0)}
+            className="px-4 py-1.5 rounded-full text-xs font-semibold transition-all"
+            style={{
+              background: mapMode === (i === 0) ? P : "rgba(255,255,255,0.08)",
+              color: mapMode === (i === 0) ? "#ffffff" : "rgba(255,255,255,0.5)",
+            }}
+          >
+            {label}
           </button>
-        </div>
-        <div className="grid grid-cols-2 gap-3">
-          {ITEMS.map((item) => (
+        ))}
+      </div>
+
+      <AnimatePresence mode="wait">
+        {mapMode ? (
+          <motion.div
+            key="map"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="flex flex-col flex-1"
+          >
+            {/* Fake map */}
             <div
-              key={item.id}
-              className="rounded-2xl overflow-hidden"
-              style={{ background: "#ffffff", boxShadow: "0 2px 12px rgba(0,0,0,0.07)" }}
+              className="mx-4 mt-3 rounded-3xl overflow-hidden relative shrink-0"
+              style={{ height: 260, background: "#e8f4e8" }}
             >
-              <div className="relative" style={{ height: 130 }}>
-                <img src={item.img} alt={item.name} className="w-full h-full object-cover" />
-                <span
-                  className="absolute top-2 left-2 px-2 py-0.5 rounded-full text-[10px] font-semibold"
-                  style={{ background: "#D4AF37", color: "#0a0a2e" }}
+              {/* SVG map background */}
+              <svg className="w-full h-full" viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice">
+                {/* Roads */}
+                <rect width="400" height="260" fill="#edf2f7"/>
+                {/* Grid roads */}
+                {[60,120,180,240,300,360].map(x => (
+                  <line key={x} x1={x} y1="0" x2={x} y2="260" stroke="#d1dce8" strokeWidth="1.5"/>
+                ))}
+                {[52,104,156,208].map(y => (
+                  <line key={y} x1="0" y1={y} x2="400" y2={y} stroke="#d1dce8" strokeWidth="1.5"/>
+                ))}
+                {/* Main roads */}
+                <line x1="0" y1="130" x2="400" y2="130" stroke="#c8d8e8" strokeWidth="4"/>
+                <line x1="200" y1="0" x2="200" y2="260" stroke="#c8d8e8" strokeWidth="4"/>
+                <line x1="0" y1="80" x2="400" y2="200" stroke="#c8d8e8" strokeWidth="3"/>
+                {/* Blocks */}
+                {[[20,20,70,40],[150,20,60,35],[250,30,80,40],[320,15,70,45],
+                  [30,90,80,40],[140,95,70,38],[240,88,75,42],[330,80,55,44],
+                  [25,155,65,42],[155,150,85,40],[255,160,70,38],[340,145,50,46],
+                  [20,210,90,35],[155,205,75,40],[260,208,80,38]].map(([x,y,w,h],i) => (
+                  <rect key={i} x={x} y={y} width={w} height={h} rx="4" fill="#dce8f2" opacity="0.8"/>
+                ))}
+                {/* Park */}
+                <ellipse cx="120" cy="180" rx="35" ry="25" fill="#b8ddb8" opacity="0.6"/>
+                <ellipse cx="320" cy="100" rx="28" ry="20" fill="#b8ddb8" opacity="0.6"/>
+              </svg>
+
+              {/* User location pin */}
+              <div
+                className="absolute flex flex-col items-center"
+                style={{ left: "48%", top: "45%", transform: "translate(-50%,-50%)" }}
+              >
+                <motion.div
+                  animate={{ scale: [1, 1.3, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className="w-5 h-5 rounded-full flex items-center justify-center"
+                  style={{ background: "rgba(26,26,46,0.85)", border: "2px solid white", boxShadow: "0 2px 8px rgba(0,0,0,0.3)" }}
                 >
-                  {item.tag}
-                </span>
+                  <div className="w-2 h-2 rounded-full" style={{ background: "#60a5fa" }} />
+                </motion.div>
+                <div className="absolute -inset-3 rounded-full" style={{ background: "rgba(96,165,250,0.15)" }} />
               </div>
-              <div className="p-3">
-                <p className="text-xs font-semibold leading-tight" style={{ color: "#0a0a2e" }}>
-                  {item.name}
-                </p>
-                <p className="text-[10px] mt-0.5" style={{ color: "#9ca3af" }}>
-                  {item.tailor}
-                </p>
-                <div className="flex items-center justify-between mt-2">
-                  <div className="flex items-center gap-1">
-                    <Star size={10} fill="#D4AF37" style={{ color: "#D4AF37" }} />
-                    <span className="text-[10px] font-medium" style={{ color: "#0a0a2e" }}>
-                      {item.rating}
-                    </span>
-                  </div>
-                  <span className="text-[10px] font-bold" style={{ color: "#D4AF37" }}>
-                    {item.price} so'm
-                  </span>
-                </div>
+
+              {/* Tailor pins */}
+              {TAILORS.map((t) => (
                 <button
-                  className="mt-2 w-full py-1.5 rounded-xl text-[11px] font-semibold flex items-center justify-center gap-1.5"
-                  style={{ background: "#0a0a2e", color: "#D4AF37" }}
+                  key={t.id}
+                  onClick={() => setSelected(selected === t.id ? null : t.id)}
+                  className="absolute flex flex-col items-center"
+                  style={{ left: `${t.x}%`, top: `${t.y}%`, transform: "translate(-50%,-50%)", zIndex: selected === t.id ? 10 : 5 }}
                 >
-                  <ShoppingBag size={12} />
-                  Buyurtma berish
+                  <motion.div
+                    whileTap={{ scale: 0.9 }}
+                    className="rounded-full overflow-hidden"
+                    style={{
+                      width: selected === t.id ? 38 : 30,
+                      height: selected === t.id ? 38 : 30,
+                      border: `2.5px solid ${selected === t.id ? P : "#ffffff"}`,
+                      boxShadow: selected === t.id ? `0 0 0 3px rgba(232,93,138,0.25), 0 4px 12px rgba(0,0,0,0.2)` : "0 2px 8px rgba(0,0,0,0.15)",
+                      transition: "all 0.2s",
+                    }}
+                  >
+                    <img src={t.img} alt={t.name} className="w-full h-full object-cover" />
+                  </motion.div>
+                  <div
+                    className="w-1.5 h-1.5 rounded-full -mt-0.5"
+                    style={{ background: selected === t.id ? P : "#ffffff", boxShadow: "0 1px 3px rgba(0,0,0,0.2)" }}
+                  />
+                </button>
+              ))}
+
+              {/* Selected tailor popup */}
+              <AnimatePresence>
+                {selected !== null && (() => {
+                  const t = TAILORS.find((x) => x.id === selected)!
+                  return (
+                    <motion.button
+                      initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                      onClick={onTailorPress}
+                      className="absolute bottom-3 left-3 right-3 p-3 rounded-2xl flex items-center gap-3 text-left"
+                      style={{ background: "#ffffff", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}
+                    >
+                      <img src={t.img} alt={t.name} className="w-11 h-11 rounded-xl object-cover shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-bold truncate" style={{ color: DARK }}>{t.name}</p>
+                        <p className="text-[10px]" style={{ color: "#8a7a85" }}>{t.spec}</p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <div className="flex items-center gap-0.5">
+                            <Star size={9} fill={P} style={{ color: P }} />
+                            <span className="text-[10px] font-semibold" style={{ color: DARK }}>{t.rating}</span>
+                          </div>
+                          <div className="flex items-center gap-0.5">
+                            <MapPin size={9} style={{ color: "#c4b0bc" }} />
+                            <span className="text-[10px]" style={{ color: "#c4b0bc" }}>{t.dist}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0"
+                        style={{ background: "#fdf0f5" }}
+                      >
+                        <ChevronRight size={14} style={{ color: P }} />
+                      </div>
+                    </motion.button>
+                  )
+                })()}
+              </AnimatePresence>
+
+              {/* My location button */}
+              <button
+                className="absolute top-3 right-3 w-9 h-9 rounded-full flex items-center justify-center"
+                style={{ background: "#ffffff", boxShadow: "0 2px 8px rgba(0,0,0,0.12)" }}
+              >
+                <Navigation size={15} style={{ color: DARK }} />
+              </button>
+            </div>
+
+            {/* Nearby tailors list */}
+            <div className="mt-4 px-4 pb-4">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-sm font-bold" style={{ color: DARK }}>Yaqin tikuvchilar</h3>
+                <button className="flex items-center gap-0.5 text-xs font-medium" style={{ color: P }}>
+                  Barchasi <ChevronRight size={12} />
                 </button>
               </div>
+              <div className="flex flex-col gap-2">
+                {TAILORS.slice(0, 3).map((t) => (
+                  <motion.button
+                    key={t.id}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={onTailorPress}
+                    className="flex items-center gap-3 p-3 rounded-2xl text-left w-full"
+                    style={{ background: "#ffffff", boxShadow: "0 1px 8px rgba(232,93,138,0.07)" }}
+                  >
+                    <img src={t.img} alt={t.name} className="w-12 h-12 rounded-2xl object-cover shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-bold truncate" style={{ color: DARK }}>{t.name}</p>
+                      <p className="text-[10px] mt-0.5" style={{ color: "#8a7a85" }}>{t.spec}</p>
+                      <div className="flex items-center gap-2 mt-1.5">
+                        <span
+                          className="px-2 py-0.5 rounded-full text-[9px] font-semibold"
+                          style={{ background: "#fdf0f5", color: P }}
+                        >
+                          {t.city}
+                        </span>
+                        <div className="flex items-center gap-0.5">
+                          <MapPin size={9} style={{ color: "#c4b0bc" }} />
+                          <span className="text-[9px]" style={{ color: "#c4b0bc" }}>{t.dist}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <div className="flex items-center justify-end gap-0.5">
+                        <Star size={10} fill={P} style={{ color: P }} />
+                        <span className="text-xs font-bold" style={{ color: DARK }}>{t.rating}</span>
+                      </div>
+                      <p className="text-[9px] mt-0.5" style={{ color: "#c4b0bc" }}>{t.orders} buyurtma</p>
+                    </div>
+                  </motion.button>
+                ))}
+              </div>
             </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Top Tailors */}
-      <div className="mt-5 px-4 pb-6">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-semibold" style={{ color: "#0a0a2e" }}>
-            Top Tikuvchilar
-          </h3>
-          <button className="flex items-center gap-0.5 text-xs" style={{ color: "#D4AF37" }}>
-            Barchasi <ChevronRight size={12} />
-          </button>
-        </div>
-        <div className="flex flex-col gap-2">
-          {TAILORS.map((t, i) => (
-            <div
-              key={t.id}
-              className="flex items-center gap-3 p-3 rounded-2xl"
-              style={{ background: "#ffffff", boxShadow: "0 1px 8px rgba(0,0,0,0.06)" }}
-            >
-              <div
-                className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm shrink-0"
-                style={{ background: i === 0 ? "#D4AF37" : "#f5f0e8", color: i === 0 ? "#0a0a2e" : "#8b7355" }}
+          </motion.div>
+        ) : (
+          /* List mode */
+          <motion.div
+            key="list"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="flex flex-col flex-1 px-4 pt-3 pb-4 gap-3"
+          >
+            <div className="flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
+              {CATS.map((c) => (
+                <button
+                  key={c}
+                  onClick={() => setCat(c)}
+                  className="shrink-0 px-4 py-1.5 rounded-full text-xs font-medium"
+                  style={{
+                    background: cat === c ? P : "#ffffff",
+                    color: cat === c ? "#ffffff" : "#8a7a85",
+                    border: `1px solid ${cat === c ? P : "#f0e4eb"}`,
+                  }}
+                >
+                  {c}
+                </button>
+              ))}
+            </div>
+            {TAILORS.map((t) => (
+              <motion.button
+                key={t.id}
+                whileTap={{ scale: 0.98 }}
+                onClick={onTailorPress}
+                className="flex items-center gap-3 p-3.5 rounded-2xl text-left w-full"
+                style={{ background: "#ffffff", boxShadow: "0 2px 12px rgba(232,93,138,0.07)" }}
               >
-                {t.name.charAt(0)}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-semibold truncate" style={{ color: "#0a0a2e" }}>
-                  {t.name}
-                </p>
-                <div className="flex items-center gap-1 mt-0.5">
-                  <MapPin size={9} style={{ color: "#9ca3af" }} />
-                  <span className="text-[10px]" style={{ color: "#9ca3af" }}>
-                    {t.city}
-                  </span>
+                <img src={t.img} alt={t.name} className="w-14 h-14 rounded-2xl object-cover shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-bold truncate" style={{ color: DARK }}>{t.name}</p>
+                  <p className="text-xs mt-0.5" style={{ color: "#8a7a85" }}>{t.spec}</p>
+                  <div className="flex items-center gap-3 mt-1.5">
+                    <div className="flex items-center gap-0.5">
+                      <Star size={11} fill={P} style={{ color: P }} />
+                      <span className="text-xs font-semibold" style={{ color: DARK }}>{t.rating}</span>
+                    </div>
+                    <div className="flex items-center gap-0.5">
+                      <MapPin size={10} style={{ color: "#c4b0bc" }} />
+                      <span className="text-xs" style={{ color: "#c4b0bc" }}>{t.dist}</span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div className="text-right shrink-0">
-                <div className="flex items-center gap-0.5">
-                  <Star size={10} fill="#D4AF37" style={{ color: "#D4AF37" }} />
-                  <span className="text-[10px] font-bold" style={{ color: "#0a0a2e" }}>
-                    {t.rating}
-                  </span>
-                </div>
-                <p className="text-[9px] mt-0.5" style={{ color: "#9ca3af" }}>
-                  {t.orders} buyurtma
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+                <ChevronRight size={16} style={{ color: "#e8d5df" }} />
+              </motion.button>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

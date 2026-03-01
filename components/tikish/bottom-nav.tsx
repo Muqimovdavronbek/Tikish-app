@@ -1,37 +1,40 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Home, Sparkles, Camera, User } from "lucide-react"
-import type { Tab } from "@/app/page"
+import { Home, Search, User, LayoutDashboard } from "lucide-react"
+import type { Screen } from "@/app/page"
 
-const tabs: { id: Tab; label: string; Icon: React.ComponentType<{ size?: number; strokeWidth?: number }> }[] = [
+const P = "#e85d8a"
+const DARK = "#1a1a2e"
+
+const tabs: { id: Screen; label: string; Icon: React.ComponentType<{ size?: number; strokeWidth?: number }> }[] = [
   { id: "home", label: "Bosh sahifa", Icon: Home },
-  { id: "stylist", label: "AI Stilist", Icon: Sparkles },
-  { id: "tryon", label: "Virtual Kiyinish", Icon: Camera },
+  { id: "search", label: "Qidiruv", Icon: Search },
   { id: "profile", label: "Profil", Icon: User },
+  { id: "tailor-dashboard", label: "Dashboard", Icon: LayoutDashboard },
 ]
 
 interface BottomNavProps {
-  activeTab: Tab
-  onTabChange: (tab: Tab) => void
+  activeScreen: Screen
+  onNavigate: (s: Screen) => void
 }
 
-export default function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
+export default function BottomNav({ activeScreen, onNavigate }: BottomNavProps) {
   return (
     <div
-      className="shrink-0 flex items-center justify-around px-2 pt-2 pb-3 relative"
+      className="shrink-0 flex items-center justify-around px-2 pt-2 pb-4"
       style={{
         background: "#ffffff",
-        borderTop: "1px solid #e8e0d0",
-        boxShadow: "0 -4px 20px rgba(0,0,0,0.06)",
+        borderTop: "1px solid #f0e4eb",
+        boxShadow: "0 -4px 24px rgba(232,93,138,0.08)",
       }}
     >
       {tabs.map(({ id, label, Icon }) => {
-        const isActive = activeTab === id
+        const isActive = activeScreen === id
         return (
           <button
             key={id}
-            onClick={() => onTabChange(id)}
+            onClick={() => onNavigate(id)}
             className="flex flex-col items-center gap-1 relative px-3 py-1 rounded-2xl transition-all"
             style={{ minWidth: 64 }}
           >
@@ -39,22 +42,23 @@ export default function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
               <motion.div
                 layoutId="nav-pill"
                 className="absolute inset-0 rounded-2xl"
-                style={{ background: "rgba(212,175,55,0.12)" }}
-                transition={{ type: "spring", stiffness: 400, damping: 35 }}
+                style={{ background: "rgba(232,93,138,0.10)" }}
+                transition={{ type: "spring", stiffness: 420, damping: 36 }}
               />
             )}
             <Icon
               size={22}
               strokeWidth={isActive ? 2.2 : 1.6}
-              style={{ color: isActive ? "#D4AF37" : "#9ca3af", position: "relative" }}
+              style={{ color: isActive ? P : "#c4b0bc", position: "relative" }}
             />
             <span
-              className="text-[10px] font-medium leading-tight relative"
+              className="relative leading-tight"
               style={{
-                color: isActive ? "#D4AF37" : "#9ca3af",
+                color: isActive ? P : "#c4b0bc",
                 fontFamily: "'Inter', sans-serif",
-                whiteSpace: "nowrap",
                 fontSize: 9,
+                fontWeight: isActive ? 600 : 400,
+                whiteSpace: "nowrap",
               }}
             >
               {label}
