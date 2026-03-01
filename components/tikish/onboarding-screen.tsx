@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion, AnimatePresence } from "@/lib/framer-motion"
 import { ChevronRight } from "lucide-react"
 
 const P = "#e85d8a"

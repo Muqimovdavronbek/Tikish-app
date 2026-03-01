@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { motion } from "framer-motion"
+import { motion } from "@/lib/framer-motion"
 
 const P = "#e85d8a"
 const DARK = "#1a1a2e"

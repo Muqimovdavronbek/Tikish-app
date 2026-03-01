@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion, AnimatePresence } from "@/lib/framer-motion"
 import SplashScreen from "@/components/tikish/splash-screen"
 import OnboardingScreen from "@/components/tikish/onboarding-screen"
 import LoginScreen from "@/components/tikish/login-screen"

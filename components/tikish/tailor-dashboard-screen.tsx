@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { motion } from "framer-motion"
+import { motion } from "@/lib/framer-motion"
 import { ChevronLeft, MessageCircle, CheckCircle, Clock, TrendingUp, Users, Star, Package } from "lucide-react"
 
 const P = "#e85d8a"

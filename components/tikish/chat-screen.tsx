@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion, AnimatePresence } from "@/lib/framer-motion"
 import { ChevronLeft, Send, Phone, MoreVertical, Check } from "lucide-react"
 
 const P = "#e85d8a"
