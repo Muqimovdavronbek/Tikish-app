@@ -1,0 +1,50 @@
+name: tikish_uz
+description: TIKISH.UZ - Raqamli Atelye. O'zbekistondagi tikuvchilar platformasi.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Navigation
+  go_router: ^13.2.0
+
+  # HTTP & API
+  http: ^1.2.1
+  dio: ^5.4.3
+
+  # State management
+  provider: ^6.1.2
+
+  # Icons
+  font_awesome_flutter: ^10.7.0
+
+  # Storage
+  shared_preferences: ^2.2.3
+
+  # Image
+  cached_network_image: ^3.3.1
+
+  # UI Utilities
+  shimmer: ^3.0.0
+  flutter_animate: ^4.5.0
+
+  # Fonts
+  google_fonts: ^6.2.1
+
+  # Markdown rendering for AI responses
+  flutter_markdown: ^0.6.22
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
