@@ -21,7 +21,7 @@ export default function TailorProfilePage({ params }: { params: { id: string } }
     rating: 4.9,
     reviews: 127,
     hourlyRate: 85000,
-    location: 'Tashkent',
+    location: 'Fergana',
     verified: true,
     responseTime: 4,
     completionRate: 98,
