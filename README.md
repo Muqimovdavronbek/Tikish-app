@@ -1,165 +1,57 @@
-# TIKISH.UZ - Tailor Marketplace Platform
+# TIKISH.UZ
 
-A modern web application connecting customers with expert tailors in Uzbekistan. Built with Next.js 16, React 19, and Tailwind CSS.
+**A marketplace interface connecting customers with tailors in Uzbekistan.**
 
 ## Features
 
-### For Customers
-- **Tailor Discovery**: Browse and search verified tailors by specialty and location
-- **Tailor Profiles**: View detailed profiles with portfolios, ratings, and reviews
-- **Order Management**: Track orders in real-time with progress updates
-- **Secure Payments**: Integrated payment system with escrow protection
-- **Real-time Chat**: Communicate directly with tailors
-- **Reviews & Ratings**: Leave feedback and read customer testimonials
+- Tailor discovery and profile screens.
+- Portfolio and service previews.
+- Customer and tailor registration flows.
+- Onboarding and personal dashboard.
+- Messaging and AI styling assistant interfaces.
 
-### For Tailors
-- **Professional Profiles**: Showcase your skills and experience
-- **Portfolio Management**: Upload and organize your best work
-- **Order Management**: Receive and manage customer orders
-- **Earnings Dashboard**: Track income and completed projects
-- **Client Reviews**: Build your reputation with ratings and testimonials
-- **Verification Badge**: Get verified to increase client trust
+**Status:** application prototype. Demo state uses browser storage. Production payments, protected transactions, realtime chat and database authentication need separate integration and verification.
 
-## Tech Stack
+## Quick start
 
-- **Frontend**: Next.js 16 with React 19
-- **Styling**: Tailwind CSS v4 with custom theme
-- **Components**: shadcn/ui component library
-- **State Management**: React hooks with localStorage (demo mode)
-- **Database**: Ready for Supabase integration
-- **Authentication**: Prepared for Supabase Auth
+Install Node.js and pnpm. Package versions are recorded in `package.json` and `pnpm-lock.yaml`.
 
-## Project Structure
-
-```
-├── app/
-│   ├── layout.tsx              # Root layout with metadata
-│   ├── globals.css             # Theme and tailwind config
-│   ├── page.tsx                # Homepage with marketplace
-│   ├── auth/
-│   │   ├── login/page.tsx      # Login page
-│   │   └── signup/page.tsx     # Signup page
-│   ├── dashboard/page.tsx      # User/tailor dashboard
-│   ├── tailor/[id]/page.tsx    # Tailor profile page
-│   └── onboarding/page.tsx     # Account setup flow
-├── components/
-│   └── ui/                     # shadcn/ui components
-├── hooks/                      # Custom React hooks
-├── lib/                        # Utilities and helpers
-└── scripts/
-    └── 01-create-schema.sql    # Database schema
+```bash
+git clone https://github.com/Muqimovdavronbek/Tikish-app.git
+cd Tikish-app
+pnpm install --frozen-lockfile
+pnpm run dev
 ```
 
-## Getting Started
+Open `http://localhost:3000` or the address shown in the terminal.
 
-### Installation
+## Usage
 
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd tikish-uz
-   ```
+Browse tailors on the home page, open a profile, choose a customer or tailor role during registration and complete onboarding to explore the dashboard.
 
-2. **Install dependencies**
-   ```bash
-   pnpm install
-   ```
+| Route | Purpose |
+| --- | --- |
+| `/` | Marketplace |
+| `/tailor/[id]` | Tailor profile |
+| `/auth/login`, `/auth/signup` | Account screens |
+| `/onboarding` | Profile setup |
+| `/dashboard` | Personal dashboard |
+| `/messages` | Messaging interface |
+| `/stylist` | Styling assistant |
 
-3. **Run the development server**
-   ```bash
-   pnpm dev
-   ```
+## Integrations
 
-4. **Open in browser**
-   - Navigate to `http://localhost:3000`
+`scripts/01-create-schema.sql` contains a database schema; its presence does not connect the application to a live database.
 
-### Demo Account Access
+`app/api/stylist/route.ts` uses AI SDK with `openai/gpt-4o-mini`. The server needs valid service access and quota. Keep credentials in server-side configuration. Demo accounts are not a substitute for production authentication.
 
-The application currently uses localStorage for demo purposes. You can:
-- Sign up with any email and password
-- Choose to be a Customer or Tailor
-- Complete the onboarding process
-- Access the dashboard and explore features
+## Development
 
-## Database Setup (Supabase)
+```bash
+pnpm run build
+pnpm run start
+```
 
-To enable real data persistence, set up Supabase:
+Pages and server routes live in `app/`, reusable UI in `components/`, assets in `public/`, and helper code in `lib/`.
 
-1. **Create Supabase Project**
-   - Go to [supabase.com](https://supabase.com)
-   - Create a new project
-
-2. **Run Database Schema**
-   - Copy the SQL from `scripts/01-create-schema.sql`
-   - Execute in Supabase SQL editor
-
-3. **Configure Environment Variables**
-   ```
-   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
-   ```
-
-## Key Pages
-
-### Public Pages
-- `/` - Homepage with marketplace and tailor discovery
-- `/tailor/[id]` - Individual tailor profile with portfolio and reviews
-
-### Authentication Pages
-- `/auth/login` - User login
-- `/auth/signup` - Account creation with role selection
-
-### User Pages (Protected)
-- `/onboarding` - Account setup and profile completion
-- `/dashboard` - Customer or tailor dashboard with orders and management
-
-## Future Enhancements
-
-- [ ] Real-time chat system with WebSockets
-- [ ] Payment integration (Stripe/Payme)
-- [ ] Advanced search and filtering
-- [ ] AI-powered tailor recommendations
-- [ ] Video consultation booking
-- [ ] Portfolio image hosting and management
-- [ ] Push notifications for orders
-- [ ] Mobile app (React Native)
-- [ ] Localization (Uzbek language)
-- [ ] Map-based tailor discovery
-- [ ] Admin dashboard for moderation
-- [ ] Analytics and insights
-
-## Styling
-
-The application uses a professional teal/emerald color scheme optimized for trust and professionalism:
-- **Primary Color**: Teal (#00A699)
-- **Secondary Color**: Light Blue-Gray
-- **Neutrals**: White, grays, and dark blue-grays
-- **Responsive Design**: Mobile-first approach with Tailwind breakpoints
-
-## Performance Optimizations
-
-- Next.js 16 with Turbopack bundler (default)
-- Image optimization with next/image
-- Component-level code splitting
-- Optimized asset loading
-- CSS-in-JS with Tailwind CSS
-
-## Security Considerations
-
-- Password hashing ready for bcrypt implementation
-- Secure session management structure
-- Input validation on all forms
-- CORS configuration ready
-- Environment variables for sensitive data
-
-## Support & Feedback
-
-For issues, feature requests, or feedback, please open an issue in the repository.
-
-## License
-
-MIT License - feel free to use this template for your projects.
-
----
-
-Built with ❤️ for the TIKISH.UZ community
+For contributions, describe the affected flow and clearly identify connected integrations versus demo behavior.
